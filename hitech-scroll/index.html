@@ -101,28 +101,30 @@
     /* ── NAVBAR ────────────────────────────────── */
     #navbar {
       position: fixed;
-      top: 16px; left: 0; right: 0;
+      top: 0; left: 0; right: 0;
       z-index: 1000;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0 40px;
+      padding: 14px 40px;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.78) 0%, rgba(0,0,0,0) 100%);
       transition: all 0.45s cubic-bezier(0.25, 0.46, 0.45, 0.94);
       pointer-events: none;
     }
     #navbar > * { pointer-events: all; }
 
     #navbar.pill {
-      max-width: 860px;
+      max-width: 900px;
       margin: 0 auto;
+      top: 12px;
       left: 0; right: 0;
-      background: rgba(255,255,255,0.92);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border: 1px solid var(--border);
+      background: rgba(8,8,8,0.90);
+      -webkit-backdrop-filter: blur(24px);
+      backdrop-filter: blur(24px);
+      border: 1px solid rgba(204,0,0,0.22);
       border-radius: 60px;
-      padding: 0 24px;
-      box-shadow: 0 4px 30px rgba(0,0,0,0.08);
+      padding: 0 28px;
+      box-shadow: 0 4px 32px rgba(0,0,0,0.5), 0 0 0 1px rgba(204,0,0,0.06);
     }
 
     .nav-brand {
@@ -135,6 +137,7 @@
       height: 40px;
       width: auto;
       display: block;
+      filter: brightness(0) invert(1);
     }
 
     .nav-links {
@@ -147,13 +150,32 @@
       font-family: var(--font-h);
       font-size: 0.8rem;
       font-weight: 600;
-      color: var(--mid);
+      color: rgba(255,255,255,0.82);
       text-decoration: none;
-      letter-spacing: 0.04em;
-      transition: color 0.2s;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      position: relative;
+      padding-bottom: 4px;
+      transition: color 0.25s, text-shadow 0.25s;
+    }
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 50%;
+      transform: translateX(-50%);
+      width: 0%; height: 2px;
+      background: var(--red);
+      box-shadow: 0 0 8px var(--red), 0 0 16px rgba(204,0,0,0.5);
+      border-radius: 2px;
+      transition: width 0.3s ease;
     }
     .nav-links a:hover,
-    .nav-links a.active { color: var(--red); }
+    .nav-links a.active {
+      color: #fff;
+      text-shadow: 0 0 14px rgba(204,0,0,0.55);
+    }
+    .nav-links a:hover::after,
+    .nav-links a.active::after { width: 85%; }
 
     .nav-cta {
       font-family: var(--font-h);
@@ -161,16 +183,31 @@
       font-weight: 700;
       color: white;
       background: var(--red);
-      padding: 9px 20px;
+      padding: 9px 22px;
       border-radius: 30px;
       text-decoration: none;
-      letter-spacing: 0.03em;
-      transition: background 0.2s, box-shadow 0.2s;
+      letter-spacing: 0.04em;
+      transition: background 0.2s, box-shadow 0.2s, transform 0.15s;
+      box-shadow: 0 0 16px rgba(204,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.12);
+      position: relative;
+      overflow: hidden;
+    }
+    .nav-cta::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 50%;
+      transform: translateX(-50%);
+      width: 70%; height: 1px;
+      background: linear-gradient(to right, transparent, rgba(255,150,150,0.9), transparent);
+      opacity: 0;
+      transition: opacity 0.4s ease;
     }
     .nav-cta:hover {
-      background: #aa0000;
-      box-shadow: 0 4px 20px rgba(204,0,0,0.35);
+      background: #bb0000;
+      box-shadow: 0 0 28px rgba(204,0,0,0.8), 0 0 8px rgba(204,0,0,0.4);
+      transform: translateY(-1px);
     }
+    .nav-cta:hover::before { opacity: 1; }
 
     /* ── HERO ──────────────────────────────────── */
     #hero {
@@ -208,24 +245,100 @@
       100% { transform: translateX(220%); opacity: 0; }
     }
 
-    /* Watermark */
-    .hero-watermark {
+    /* ── HERO IMAGE SLIDER ──────────────────────── */
+    .hero-slider {
       position: absolute;
       inset: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      pointer-events: none;
       z-index: 0;
       overflow: hidden;
     }
-    .hero-watermark img {
-      width: 55vw;
-      max-width: 600px;
-      opacity: 0.045;
-      filter: grayscale(1);
-      user-select: none;
+    .hero-slide {
+      position: absolute;
+      inset: 0;
+      background-size: cover;
+      background-position: center;
+      opacity: 0;
+      transition: opacity 1.1s ease-in-out;
+      will-change: opacity, transform;
     }
+    .hero-slide.active {
+      opacity: 1;
+      animation: ken-burns 3.8s ease-out forwards;
+    }
+    @keyframes ken-burns {
+      from { transform: scale(1.0); }
+      to   { transform: scale(1.08); }
+    }
+    .hero-slider-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.48);
+      z-index: 1;
+      pointer-events: none;
+    }
+    /* Slider arrows */
+    .slider-arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 4;
+      width: 50px; height: 50px;
+      border-radius: 50%;
+      background: rgba(0,0,0,0.38);
+      border: 1px solid rgba(255,255,255,0.18);
+      color: #fff;
+      font-size: 2rem;
+      line-height: 1;
+      cursor: pointer;
+      transition: background 0.2s, box-shadow 0.2s, transform 0.15s;
+      display: flex; align-items: center; justify-content: center;
+      -webkit-backdrop-filter: blur(8px);
+      backdrop-filter: blur(8px);
+    }
+    .slider-arrow:hover {
+      background: rgba(204,0,0,0.65);
+      box-shadow: 0 0 20px rgba(204,0,0,0.55);
+      transform: translateY(-50%) scale(1.05);
+    }
+    .slider-prev { left: 28px; }
+    .slider-next { right: 28px; }
+    /* Slider dots */
+    .slider-dots {
+      position: absolute;
+      bottom: 90px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 4;
+      display: flex; gap: 10px;
+      align-items: center;
+    }
+    .slider-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.35);
+      border: none; cursor: pointer;
+      transition: background 0.3s, transform 0.3s, box-shadow 0.3s;
+      padding: 0;
+    }
+    .slider-dot.active {
+      background: var(--red);
+      transform: scale(1.5);
+      box-shadow: 0 0 8px rgba(204,0,0,0.8);
+    }
+    @media (max-width: 768px) {
+      .slider-arrow { display: none; }
+      .slider-dots { bottom: 70px; }
+    }
+    /* Watermark — removed (hidden) */
+    .hero-watermark { display: none; }
+    /* Background paths — hidden (real images used) */
+    .hero-paths-wrap { display: none; }
+    /* Hero slide background images */
+    .hs-1 { background-image: url('hero-pics/hero-1.jpg'); }
+    .hs-2 { background-image: url('hero-pics/hero-2.jpg'); }
+    .hs-3 { background-image: url('hero-pics/hero-3.jpg'); }
+    .hs-4 { background-image: url('hero-pics/hero-4.jpg'); }
+    .hs-5 { background-image: url('hero-pics/hero-5.jpg'); }
 
     /* Red glow behind headline */
     .hero-glow {
@@ -317,11 +430,12 @@
       font-family: var(--font-h);
       font-size: clamp(2.8rem, 7vw, 6rem);
       font-weight: 800;
-      color: var(--dark);
+      color: #ffffff;
       line-height: 1.0;
       letter-spacing: -0.03em;
       position: relative;
       z-index: 1;
+      text-shadow: 0 2px 24px rgba(0,0,0,0.4);
     }
 
     .hero-tagline {
@@ -338,7 +452,7 @@
     .hero-sub {
       font-family: var(--font-b);
       font-size: clamp(0.9rem, 1.6vw, 1.1rem);
-      color: var(--muted);
+      color: rgba(255,255,255,0.72);
       line-height: 1.7;
       max-width: 500px;
       margin-top: 18px;
@@ -382,18 +496,19 @@
       font-weight: 600;
       font-size: 0.9rem;
       letter-spacing: 0.03em;
-      color: var(--dark);
+      color: rgba(255,255,255,0.9);
       background: transparent;
       padding: 14px 32px;
       border-radius: 50px;
       text-decoration: none;
-      border: 1.5px solid rgba(0,0,0,0.15);
+      border: 1.5px solid rgba(255,255,255,0.35);
       cursor: pointer;
-      transition: border-color 0.2s, color 0.2s, transform 0.15s;
+      transition: border-color 0.2s, color 0.2s, box-shadow 0.2s, transform 0.15s;
     }
     .btn-secondary:hover {
       border-color: var(--red);
-      color: var(--red);
+      color: #fff;
+      box-shadow: 0 0 18px rgba(204,0,0,0.35);
       transform: translateY(-1px);
     }
 
@@ -484,28 +599,63 @@
     /* Annotation cards */
     .anno-card {
       position: absolute;
-      width: 260px;
-      background: rgba(255,255,255,0.92);
-      backdrop-filter: blur(24px);
+      width: 270px;
+      background: rgba(255,255,255,0.94);
       -webkit-backdrop-filter: blur(24px);
+      backdrop-filter: blur(24px);
       border: 1px solid rgba(0,0,0,0.1);
       border-radius: 16px;
-      padding: 22px 24px;
-      box-shadow: 0 8px 40px rgba(0,0,0,0.10);
+      padding: 22px 24px 16px;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.12);
       opacity: 0;
-      transform: translateY(16px);
-      transition: opacity 0.4s ease, transform 0.4s ease;
+      transition: opacity 0.55s ease-in-out, transform 0.55s ease-in-out;
       pointer-events: none;
       z-index: 10;
+      /* All cards fixed to right side, vertically centered */
+      right: 48px;
+      left: auto;
+      top: 50%;
+      transform: translateY(calc(-50% + 20px));
     }
     .anno-card.visible {
       opacity: 1;
-      transform: translateY(0);
+      transform: translateY(-50%);
+      pointer-events: auto;
     }
-    .anno-card.side-right { right: 48px; top: 50%; transform: translateY(calc(-50% + 16px)); }
-    .anno-card.side-right.visible { transform: translateY(-50%); }
-    .anno-card.side-left  { left: 48px;  top: 50%; transform: translateY(calc(-50% + 16px)); }
-    .anno-card.side-left.visible  { transform: translateY(-50%); }
+    /* Anno navigation footer */
+    .anno-nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 14px;
+      padding-top: 12px;
+      border-top: 1px solid rgba(0,0,0,0.06);
+    }
+    .anno-btn {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      border: 1.5px solid rgba(204,0,0,0.25);
+      background: transparent;
+      color: var(--red);
+      font-size: 1.2rem;
+      line-height: 1;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.2s, border-color 0.2s, transform 0.15s;
+      padding: 0;
+    }
+    .anno-btn:hover {
+      background: var(--red);
+      color: white;
+      border-color: var(--red);
+      transform: scale(1.1);
+    }
+    .anno-counter {
+      font-family: var(--font-m);
+      font-size: 0.62rem;
+      letter-spacing: 0.14em;
+      color: var(--muted);
+    }
 
     .anno-num {
       font-family: var(--font-m);
@@ -556,14 +706,16 @@
         width: auto;
         left: 12px !important; right: 12px !important;
         top: auto !important; bottom: 20px !important;
-        transform: translateY(16px) !important;
-        border-radius: 12px; padding: 12px 16px;
+        transform: translateY(20px) !important;
+        border-radius: 12px; padding: 12px 16px 10px;
         display: flex; align-items: center; gap: 12px;
+        flex-wrap: wrap;
       }
       .anno-card.visible { transform: translateY(0) !important; }
       .anno-desc, .anno-stat { display: none; }
       .anno-num { margin-bottom: 2px; }
       .anno-label { font-size: 0.88rem; margin-bottom: 0; }
+      .anno-nav { width: 100%; margin-top: 8px; padding-top: 8px; }
     }
 
     /* ── SPECS SECTION ─────────────────────────── */
@@ -1111,31 +1263,39 @@
       <li><a href="#specs">About</a></li>
       <li><a href="#testimonials">Reviews</a></li>
     </ul>
-    <a class="nav-cta" href="https://wa.me/923004154606" target="_blank" rel="noopener noreferrer">Book Service</a>
+    <a class="nav-cta" href="https://wa.me/923226400374" target="_blank" rel="noopener noreferrer">Book Service</a>
   </nav>
 
   <!-- HERO -->
   <section id="hero">
-    <!-- Background Paths -->
-    <div class="hero-paths-wrap" aria-hidden="true">
-      <div class="hero-paths-layer"><svg id="bg-paths-1" viewBox="0 0 696 316" fill="none"></svg></div>
-      <div class="hero-paths-layer"><svg id="bg-paths-2" viewBox="0 0 696 316" fill="none"></svg></div>
+    <!-- Image Slider -->
+    <div class="hero-slider" id="hero-slider">
+      <div class="hero-slide hs-4 active"></div>
+      <div class="hero-slide hs-2"></div>
+      <div class="hero-slide hs-5"></div>
+      <div class="hero-slide hs-1"></div>
+      <div class="hero-slide hs-3"></div>
+      <div class="hero-slider-overlay"></div>
+    </div>
+
+    <!-- Slider arrows (desktop only) -->
+    <button type="button" class="slider-arrow slider-prev" aria-label="Previous slide">&#8249;</button>
+    <button type="button" class="slider-arrow slider-next" aria-label="Next slide">&#8250;</button>
+
+    <!-- Dot indicators -->
+    <div class="slider-dots" aria-label="Slide indicators">
+      <button type="button" class="slider-dot active" data-idx="0" aria-label="Go to slide 1"></button>
+      <button type="button" class="slider-dot"        data-idx="1" aria-label="Go to slide 2"></button>
+      <button type="button" class="slider-dot"        data-idx="2" aria-label="Go to slide 3"></button>
+      <button type="button" class="slider-dot"        data-idx="3" aria-label="Go to slide 4"></button>
+      <button type="button" class="slider-dot"        data-idx="4" aria-label="Go to slide 5"></button>
     </div>
 
     <!-- Speed lines -->
     <div class="speed-lines" id="speed-lines"></div>
 
-    <!-- Watermark -->
-    <div class="hero-watermark">
-      <img src="HI-TECH LOGO.png" alt="" aria-hidden="true" />
-    </div>
-
     <!-- Red glow -->
     <div class="hero-glow"></div>
-
-    <!-- Orbs -->
-    <div class="hero-orb hero-orb-1"></div>
-    <div class="hero-orb hero-orb-2"></div>
 
     <!-- Floating badge -->
     <div class="hero-badge">
@@ -1154,7 +1314,7 @@
     </p>
 
     <div class="hero-actions">
-      <a class="btn-primary" href="https://wa.me/923004154606" target="_blank" rel="noopener noreferrer">
+      <a class="btn-primary" href="https://wa.me/923226400374" target="_blank" rel="noopener noreferrer">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
         Book via WhatsApp
       </a>
@@ -1175,7 +1335,7 @@
   <section id="scroll-anim" class="scroll-animation-container">
     <canvas id="scroll-canvas"></canvas>
 
-    <div class="anno-card side-right" id="anno-1">
+    <div class="anno-card" id="anno-1">
       <div class="anno-num">01 / ENGINEERING</div>
       <div class="anno-label">Precision<br>Repairs</div>
       <div class="anno-desc">Every component hand-inspected with meticulous attention to engineering tolerances.</div>
@@ -1183,9 +1343,14 @@
         <span class="anno-stat-value">25+</span>
         <span class="anno-stat-label">Years of Mastery</span>
       </div>
+      <div class="anno-nav">
+        <button type="button" class="anno-btn anno-prev-btn" aria-label="Previous">&#8249;</button>
+        <span class="anno-counter">1 / 4</span>
+        <button type="button" class="anno-btn anno-next-btn" aria-label="Next">&#8250;</button>
+      </div>
     </div>
 
-    <div class="anno-card side-left" id="anno-2">
+    <div class="anno-card" id="anno-2">
       <div class="anno-num">02 / DIAGNOSTICS</div>
       <div class="anno-label">Advanced<br>Fault Detection</div>
       <div class="anno-desc">State-of-the-art electronic scanning identifies root causes, not just symptoms.</div>
@@ -1193,9 +1358,14 @@
         <span class="anno-stat-value">5K+</span>
         <span class="anno-stat-label">Vehicles Diagnosed</span>
       </div>
+      <div class="anno-nav">
+        <button type="button" class="anno-btn anno-prev-btn" aria-label="Previous">&#8249;</button>
+        <span class="anno-counter">2 / 4</span>
+        <button type="button" class="anno-btn anno-next-btn" aria-label="Next">&#8250;</button>
+      </div>
     </div>
 
-    <div class="anno-card side-right" id="anno-3">
+    <div class="anno-card" id="anno-3">
       <div class="anno-num">03 / PARTS</div>
       <div class="anno-label">Genuine<br>Parts Only</div>
       <div class="anno-desc">OEM-grade certified components. Never counterfeit. Never compromised.</div>
@@ -1203,15 +1373,25 @@
         <span class="anno-stat-value">100%</span>
         <span class="anno-stat-label">Quality Assured</span>
       </div>
+      <div class="anno-nav">
+        <button type="button" class="anno-btn anno-prev-btn" aria-label="Previous">&#8249;</button>
+        <span class="anno-counter">3 / 4</span>
+        <button type="button" class="anno-btn anno-next-btn" aria-label="Next">&#8250;</button>
+      </div>
     </div>
 
-    <div class="anno-card side-left" id="anno-4">
+    <div class="anno-card" id="anno-4">
       <div class="anno-num">04 / LEGACY</div>
       <div class="anno-label">Complete<br>Car Care</div>
       <div class="anno-desc">From routine oil changes to full engine rebuilds — one trusted address in Gujrat.</div>
       <div class="anno-stat">
         <span class="anno-stat-value">1999</span>
         <span class="anno-stat-label">Established Since</span>
+      </div>
+      <div class="anno-nav">
+        <button type="button" class="anno-btn anno-prev-btn" aria-label="Previous">&#8249;</button>
+        <span class="anno-counter">4 / 4</span>
+        <button type="button" class="anno-btn anno-next-btn" aria-label="Next">&#8250;</button>
       </div>
     </div>
   </section>
@@ -1315,7 +1495,7 @@
     <h2 class="cta-title">Book Your Service Today</h2>
     <p class="cta-sub">Honest diagnosis. Transparent pricing. Work that's guaranteed. Bring your car in — we'll take it from there.</p>
     <div class="cta-actions">
-      <a class="btn-wa" href="https://wa.me/923004154606" target="_blank" rel="noopener noreferrer">
+      <a class="btn-wa" href="https://wa.me/923226400374" target="_blank" rel="noopener noreferrer">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
         Ask HTA on WhatsApp
       </a>
@@ -1388,7 +1568,7 @@
       <div class="footer-links-col">
         <h4>Connect</h4>
         <ul>
-          <li><a href="https://wa.me/923004154606" target="_blank" rel="noopener noreferrer">WhatsApp</a></li>
+          <li><a href="https://wa.me/923226400374" target="_blank" rel="noopener noreferrer">WhatsApp</a></li>
           <li><a href="https://www.facebook.com/hitechautomobilesofficial" target="_blank" rel="noopener noreferrer">Facebook</a></li>
           <li><a href="https://www.instagram.com/hitechautomobilesofficial" target="_blank" rel="noopener noreferrer">Instagram</a></li>
           <li><a href="https://www.youtube.com/@hitechautomobilesofficial" target="_blank" rel="noopener noreferrer">YouTube</a></li>
@@ -1600,7 +1780,6 @@
       if (idx !== lastDrawnIdx) {
         drawFrameAt(idx);
         lastDrawnIdx = idx;
-        updateAnnotations(currentFrame / (TOTAL_FRAMES - 1));
       }
 
       const done = (playDir > 0 && currentFrame >= TOTAL_FRAMES - 1)
@@ -1639,9 +1818,6 @@
           stopAnimation();
           currentFrame = 0;
           drawFrameAt(0);
-          for (const cfg of ANNO_CONFIG) {
-            document.getElementById(cfg.id).classList.remove('visible');
-          }
         }
       }
     }, { threshold: 0.15 });
@@ -1812,8 +1988,110 @@
       }
     }
 
-    fillSVG(document.getElementById('bg-paths-1'),  1);
-    fillSVG(document.getElementById('bg-paths-2'), -1);
+    const el1 = document.getElementById('bg-paths-1');
+    const el2 = document.getElementById('bg-paths-2');
+    if (!el1 || !el2) return; // paths removed — hero uses real images
+    fillSVG(el1,  1);
+    fillSVG(el2, -1);
+  })();
+
+  // ═══════════════════════════════════════════════
+  // ANNOTATION CARD CONTROLLER (independent of tyre)
+  // ═══════════════════════════════════════════════
+  (function annoController() {
+    const cards = [
+      document.getElementById('anno-1'),
+      document.getElementById('anno-2'),
+      document.getElementById('anno-3'),
+      document.getElementById('anno-4'),
+    ];
+    const total = cards.length;
+    let current = 0;
+    let annoTimer = null;
+
+    function showCard(idx) {
+      cards[current].classList.remove('visible');
+      current = ((idx % total) + total) % total;
+      cards[current].classList.add('visible');
+    }
+
+    function nextCard() { showCard(current + 1); }
+    function prevCard() { showCard(current - 1); }
+    function startAnnoTimer() { annoTimer = setInterval(nextCard, 4500); }
+    function stopAnnoTimer()  { clearInterval(annoTimer); }
+
+    // Wire prev/next buttons on each card
+    cards.forEach(function(card) {
+      var prevBtn = card.querySelector('.anno-prev-btn');
+      var nextBtn = card.querySelector('.anno-next-btn');
+      if (prevBtn) prevBtn.addEventListener('click', function() { stopAnnoTimer(); prevCard(); startAnnoTimer(); });
+      if (nextBtn) nextBtn.addEventListener('click', function() { stopAnnoTimer(); nextCard(); startAnnoTimer(); });
+    });
+
+    // Trigger when scroll-anim section enters viewport
+    var section = document.getElementById('scroll-anim');
+    var annoObserver = new IntersectionObserver(function(entries) {
+      for (var i = 0; i < entries.length; i++) {
+        if (entries[i].isIntersecting) {
+          showCard(0);
+          startAnnoTimer();
+        } else {
+          cards[current].classList.remove('visible');
+          stopAnnoTimer();
+          current = 0;
+        }
+      }
+    }, { threshold: 0.2 });
+    annoObserver.observe(section);
+  })();
+
+  // ═══════════════════════════════════════════════
+  // HERO IMAGE SLIDER
+  // ═══════════════════════════════════════════════
+  (function heroSlider() {
+    const slides = [...document.querySelectorAll('.hero-slide')];
+    const dots   = [...document.querySelectorAll('.slider-dot')];
+    let current = 0;
+    let timer   = null;
+    let startX  = 0;
+
+    function goTo(idx) {
+      slides[current].classList.remove('active');
+      dots[current].classList.remove('active');
+      current = ((idx % slides.length) + slides.length) % slides.length;
+      // Force Ken Burns animation to restart from scale(1) each time
+      const s = slides[current];
+      s.style.animation = 'none';
+      void s.offsetWidth; // trigger reflow
+      s.style.animation = '';
+      s.classList.add('active');
+      dots[current].classList.add('active');
+    }
+
+    function next() { goTo(current + 1); }
+    function prev() { goTo(current - 1); }
+    function startTimer() { timer = setInterval(next, 4000); }
+    function stopTimer()  { clearInterval(timer); }
+
+    document.querySelector('.slider-prev').addEventListener('click', function() { stopTimer(); prev(); startTimer(); });
+    document.querySelector('.slider-next').addEventListener('click', function() { stopTimer(); next(); startTimer(); });
+    dots.forEach(function(dot, i) {
+      dot.addEventListener('click', function() { stopTimer(); goTo(i); startTimer(); });
+    });
+
+    // Touch swipe (mobile)
+    const hero = document.getElementById('hero');
+    hero.addEventListener('touchstart', function(e) { startX = e.touches[0].clientX; }, { passive: true });
+    hero.addEventListener('touchend', function(e) {
+      const diff = startX - e.changedTouches[0].clientX;
+      if (Math.abs(diff) > 50) {
+        stopTimer();
+        if (diff > 0) { next(); } else { prev(); }
+        startTimer();
+      }
+    }, { passive: true });
+
+    startTimer();
   })();
 
   // ═══════════════════════════════════════════════

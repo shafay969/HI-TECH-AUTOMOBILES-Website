@@ -1,19 +1,21 @@
 # HITECH AUTOMOBILES — Project Handoff
-**Written:** 2026-04-02
+**Last updated:** 2026-04-03
 **Project root:** `/Users/shafaybilal/Desktop/HITECH website/`
+**GitHub repo:** https://github.com/shafay969/HI-TECH-AUTOMOBILES-Website
+**Branch:** `main` (1 commit: `78f7487`)
 
 ---
 
 ## 1. Project Overview
 
-Two parallel deliverables exist in this workspace:
+Two deliverables exist in this workspace:
 
 | Deliverable | Folder | Tech | Purpose |
 |---|---|---|---|
-| **Scroll-stop site** | `hitech-scroll/` | Vanilla HTML/CSS/JS | Production-ready marketing site for Hi-Tech Automobiles with Apple-style scroll animation |
-| **React component demo** | `hitech-app/` | Next.js 16 + TypeScript + Tailwind + shadcn | Integration of the `BackgroundPaths` UI component, separate from the main site |
+| **Main production site** | `hitech-scroll/` | Vanilla HTML/CSS/JS | Hi-Tech Automobiles marketing site with scroll animation, badge orbit, neon buttons |
+| **React component demo** | `hitech-app/` | Next.js 16 + TypeScript + Tailwind + shadcn | BackgroundPaths + NeonButton component integration demo |
 
-The **scroll-stop site (`hitech-scroll/`)** is the primary deliverable. The `hitech-app/` is a secondary task (component integration exercise).
+**`hitech-scroll/` is the primary deliverable.** `hitech-app/` is a secondary component exercise.
 
 ---
 
@@ -21,172 +23,203 @@ The **scroll-stop site (`hitech-scroll/`)** is the primary deliverable. The `hit
 
 | Asset | Path |
 |---|---|
-| **Logo PNG** (master copy in assets) | `/Users/shafaybilal/Desktop/HITECH website/assets/HI-TECH LOGO.png` |
+| **Logo PNG** (master copy) | `/Users/shafaybilal/Desktop/HITECH website/assets/HI-TECH LOGO.png` |
 | **Logo PNG** (copy used by scroll site) | `/Users/shafaybilal/Desktop/HITECH website/hitech-scroll/HI-TECH LOGO.png` |
-| **Animation video** (source MP4) | `/Users/shafaybilal/Desktop/HITECH website/scroll-stop-builder-skill/assets/animation video.mp4` |
 | **Extracted frames** (122 JPEGs) | `/Users/shafaybilal/Desktop/HITECH website/hitech-scroll/frames/frame_0001.jpg` → `frame_0122.jpg` |
-| **Scroll site HTML** | `/Users/shafaybilal/Desktop/HITECH website/hitech-scroll/index.html` |
-| **Skill definition** | `/Users/shafaybilal/Desktop/HITECH website/scroll-stop-builder-skill/SKILL.md` |
-| **Sections reference guide** | `/Users/shafaybilal/Desktop/HITECH website/scroll-stop-builder-skill/references/sections-guide.md` |
-| **3D asset template** | `/Users/shafaybilal/Desktop/HITECH website/assets/3d-asset-template.html` |
+| **Scroll site HTML** (1833 lines) | `/Users/shafaybilal/Desktop/HITECH website/hitech-scroll/index.html` |
+| **React neon button** | `/Users/shafaybilal/Desktop/HITECH website/hitech-app/src/components/ui/neon-button.tsx` |
+| **React background paths** | `/Users/shafaybilal/Desktop/HITECH website/hitech-app/src/components/ui/background-paths.tsx` |
+| **React page (demo)** | `/Users/shafaybilal/Desktop/HITECH website/hitech-app/src/app/page.tsx` |
 
 **Logo notes:**
-- The logo file name has a space in it: `HI-TECH LOGO.png` — must be quoted in CLI commands and URL-encoded as `HI-TECH%20LOGO.png` in any web context.
-- The scroll site references it as a relative path `src="HI-TECH LOGO.png"` — this works only when served over HTTP (the `python3 -m http.server` local server), NOT when opened as a `file://` URL directly in the browser.
-- There is **no SVG version** of the logo. Only the PNG exists.
+- Filename has a space: `HI-TECH LOGO.png` — URL-encode as `HI-TECH%20LOGO.png` in any web context.
+- Referenced in site as relative `src="HI-TECH LOGO.png"` — works only over HTTP, NOT `file://`.
+- No SVG version exists. PNG only.
+- Source animation video (`animation video.mp4`) was deleted during cleanup — frames are already extracted, video is not needed.
 
 ---
 
-## 3. All Files Created and Their Purpose
+## 3. All Files and Their Purpose
 
-### 3a. `hitech-scroll/` — The Main Site
+### 3a. Root Level
 
-| File | Size | Purpose |
-|---|---|---|
-| `hitech-scroll/index.html` | ~60 KB | The entire scroll-stop site — all HTML, CSS, JS in one self-contained file |
-| `hitech-scroll/HI-TECH LOGO.png` | (copy) | Logo referenced by the site — must live next to index.html |
-| `hitech-scroll/frames/frame_0001.jpg` … `frame_0122.jpg` | ~20 MB total | 122 JPEG frames extracted from the animation video at 24fps, 1920px width, `-q:v 2` quality |
+| File | Purpose |
+|---|---|
+| `.gitignore` | Covers `node_modules/`, `.next/`, `.DS_Store`, build artifacts |
+| `HANDOFF.md` | This file — project documentation |
+| `assets/HI-TECH LOGO.png` | Master copy of logo PNG |
 
-**How to serve the scroll site:**
+### 3b. `hitech-scroll/` — The Production Site
+
+| File | Purpose |
+|---|---|
+| `index.html` | Entire site — all HTML, CSS, JS self-contained in one 1833-line file |
+| `HI-TECH LOGO.png` | Logo copy referenced by `index.html` — must be next to it |
+| `frames/frame_0001.jpg` … `frame_0122.jpg` | 122 JPEG animation frames at 1920px width, `-q:v 2` JPEG quality |
+
+**How to serve locally:**
 ```bash
 cd "/Users/shafaybilal/Desktop/HITECH website/hitech-scroll"
 python3 -m http.server 8080
 # → open http://localhost:8080
 ```
-> ⚠️ Must use a local HTTP server. `file://` protocol breaks frame image loading and logo display.
+> ⚠️ Must use HTTP server. `file://` breaks frame loading and logo display.
 
-### 3b. `hitech-app/` — React Component Demo
+**How to deploy on Netlify:**
+- Connect GitHub repo `shafay969/HI-TECH-AUTOMOBILES-Website`
+- Publish directory: `hitech-scroll`
+- Build command: (leave empty)
+- Base directory: (leave empty)
+
+### 3c. `hitech-app/` — React Component Demo
 
 | File | Purpose |
 |---|---|
-| `hitech-app/src/app/page.tsx` | Root page — renders `<BackgroundPaths title="Background Paths" />` |
-| `hitech-app/src/app/layout.tsx` | Next.js root layout with font setup |
-| `hitech-app/src/app/globals.css` | Tailwind base styles + shadcn CSS variables |
-| `hitech-app/src/components/ui/background-paths.tsx` | The `BackgroundPaths` + `FloatingPaths` component (framer-motion animated SVG paths) |
-| `hitech-app/src/components/ui/button.tsx` | Radix-based shadcn Button (replaced the Base UI version that shadcn auto-generated) |
-| `hitech-app/src/lib/utils.ts` | `cn()` helper (clsx + tailwind-merge) |
-| `hitech-app/components.json` | shadcn config — style: `base-nova`, aliases point to `@/components/ui` |
-| `hitech-app/package.json` | Next.js 16.2.2, React 19, framer-motion, @radix-ui/react-slot, class-variance-authority |
-| `hitech-app/tsconfig.json` | TypeScript config with `@/*` path alias pointing to `src/` |
-| `hitech-app/next.config.ts` | Minimal Next.js config |
+| `src/app/page.tsx` | Demo page — renders BackgroundPaths + NeonButton showcase |
+| `src/app/layout.tsx` | Next.js root layout with font setup |
+| `src/app/globals.css` | Tailwind base styles + shadcn CSS variables |
+| `src/components/ui/background-paths.tsx` | Framer-motion animated SVG paths component |
+| `src/components/ui/neon-button.tsx` | Neon button component (red #CC0000, 3 variants: default/solid/ghost) |
+| `src/components/ui/button.tsx` | Radix-based shadcn Button |
+| `src/lib/utils.ts` | `cn()` helper (clsx + tailwind-merge) |
+| `components.json` | shadcn config |
+| `package.json` | Next.js 16.2.2, React 19, framer-motion, class-variance-authority |
 
-**How to run the React demo:**
+**How to run:**
 ```bash
 cd "/Users/shafaybilal/Desktop/HITECH website/hitech-app"
+npm install   # first time only — node_modules was gitignored
 npm run dev
-# → http://localhost:3001 (port 3000 is occupied by another process, PID 6237)
+# → http://localhost:3000 (or 3001 if 3000 is occupied)
 ```
 
 ---
 
 ## 4. `hitech-scroll/index.html` — Full Section Map
 
-The site is one ~60KB self-contained HTML file. Sections in order:
-
-| Section | HTML id | Notes |
+| Section | HTML `id` | Notes |
 |---|---|---|
 | Scroll progress bar | `#scroll-progress` | Fixed 3px red bar at top |
 | Particle canvas | `#particle-canvas` | Fixed behind everything, 50 floating red/dark particles |
-| Loader | `#loader` | Shows logo + progress bar while 122 frames preload |
+| Loader | `#loader` | Logo + progress bar while 122 frames preload |
 | Navbar | `#navbar` | Transparent → glass pill on scroll past 60px |
-| Hero | `#hero` | Background paths + speed lines + watermark + orbs + badge + headline |
-| Scroll animation | `#scroll-anim` | 100vh canvas, auto-plays on IntersectionObserver |
+| Hero | `#hero` | Background paths + speed lines + watermark + orbs + badge (orbiting) + headline |
+| Scroll animation | `#scroll-anim` | 100vh canvas, plays forward then auto-reverses to frame 0 |
 | Specs | `#specs` | Dark bg, 4 count-up numbers in red |
-| Services | `#services` | 6 cards, each with red top border |
+| Services | `#services` | 6 cards with red top borders |
 | Founder quote | `#founder` | Mudassar Bashir quote with logo |
 | CTA | `#cta` | Dark bg, WhatsApp + call buttons |
-| Testimonials | `#testimonials` | 5 drag-scrollable cards (PLACEHOLDER — see Section 6) |
-| Footer | `#footer` | Red top border stripe, logo, links, social |
+| Testimonials | `#testimonials` | 5 drag-scrollable cards (PLACEHOLDER — see Section 7) |
+| Footer | `#footer` | Red top border, logo, links, social |
 
 ---
 
-## 5. State of All 5 Fixes (from the "Fix these 5 things" request)
+## 5. Status of All 5 Original Fixes
 
 ### Fix 1 — Logo ✅ COMPLETE
-- All `H|A` CSS/text monograms replaced with `<img src="HI-TECH LOGO.png">` tags
-- Logo appears in: loader, navbar, hero watermark (faded), founder section, footer
-- Logo sizes: loader=80px height, navbar=40px height, founder=64px height, footer=52px height
-- **No remaining monogram anywhere in the file**
+- All monograms replaced with `<img src="HI-TECH LOGO.png">` tags
+- Logo in: loader (80px), navbar (40px), hero watermark (4.5% opacity, greyscale), founder section (64px), footer (52px)
 
 ### Fix 2 — Hero Text Hierarchy ✅ COMPLETE
-- `HI-TECH AUTOMOBILES` is the primary `<h1>` in large bold (`clamp(2.8rem, 7vw, 6rem)`, weight 800)
-- `Destination Before Journey` is the tagline below it in medium weight, red color (`1.9rem` max)
-- `Gujrat, Punjab, Pakistan` eyebrow line in red mono above the h1
+- `HI-TECH AUTOMOBILES` = `<h1 class="hero-brand-name">` — `clamp(2.8rem, 7vw, 6rem)`, weight 800
+- `Destination Before Journey` = tagline below h1 — medium weight, red, `clamp(1.2rem, 2.5vw, 1.9rem)`
+- `Gujrat, Punjab, Pakistan` = eyebrow line in red mono above h1
 
 ### Fix 3 — Hero Visual Design ✅ COMPLETE
-All elements implemented:
-- **Background paths**: 72 animated SVG paths (36 per position layer), `#CC0000` red, traveling animation
-- **Speed lines**: 8 horizontal gradient lines shooting across hero at staggered timing
-- **Watermark**: Logo PNG at 4.5% opacity, full-width, greyscale, centered
-- **Red glow**: Radial ellipse behind headline, gently pulses on 4s loop
-- **Floating badge**: "Est. 1999 / Gujrat's #1 Workshop" card, floats top-right, hidden on mobile
-- **Scroll indicator**: Three cascading red chevron arrows replacing old mouse-dot
+- **Background paths**: 72 animated SVG paths (36 per layer), `#CC0000`, `position: absolute; inset: 0; z-index: 0` — behind all hero text (text is `z-index: 1`)
+- **Fade on scroll**: JS in `handleScroll()` fades paths opacity 1→0 as user scrolls through first 55% of hero height
+- **Bottom mask**: `linear-gradient(to bottom, black 45%, transparent 88%)` — paths dissolve at hero bottom edge
+- **Speed lines**: 8 horizontal gradient lines
+- **Watermark**: Logo at 4.5% opacity, greyscale, centered
+- **Red glow**: Pulsing radial ellipse behind headline (4s loop)
+- **Floating badge**: "Est. 1999 / Gujrat's #1 Workshop" — orbits entire viewport perimeter via JS rAF (30s lap, clockwise, `position: fixed; z-index: 900`)
+- **Scroll indicator**: Three cascading red chevron arrows
 
 ### Fix 4 — Red Color Usage ✅ COMPLETE
-- Service cards: `border-top: 3px solid var(--red)` on all 6 cards
-- Specs numbers: `color: var(--red)` (was white), red `text-shadow` glow during count-up
-- Section title underlines: `<span class="section-title-underline">` — 44px wide, 3px, red, auto-margin center
-- Footer top border: `border-top: 4px solid var(--red)` on `#footer`
-- Specs section top: `border-top: 4px solid var(--red)` on `#specs`
-- Nav links: `.active` class → `color: var(--red)` (note: active class is CSS-only; no JS sets it dynamically — see known issues)
+- Service cards: `border-top: 3px solid var(--red)`
+- Specs numbers: `color: var(--red)` with red glow during count-up
+- Section title underlines: `<span class="section-title-underline">` — 44px, 3px, red
+- Footer top border: `border-top: 4px solid var(--red)`
+- Specs section top: `border-top: 4px solid var(--red)`
 
-### Fix 5 — Scroll Animation ✅ COMPLETE
-- **Mechanism**: `IntersectionObserver` at 15% threshold watches `#scroll-anim`
-- **Forward play**: When section enters from below (user scrolling down) → auto-plays frames 1→122 at 60fps over 2600ms
-- **Reverse play**: When section enters from above (user scrolling up) → auto-plays frames 122→1
-- **No scroll-locking**: All `body.scroll-locked`, `SNAP_ZONE`, `HOLD_DURATION`, `isSnapping` code is completely removed — verified with grep
-- **rAF engine**: `playAnimation(direction)` uses `requestAnimationFrame` with delta-time for smooth 60fps
-- **Annotation cards**: Fade in/out as overlays based on `currentFrame / (TOTAL_FRAMES - 1)` progress ratio — no snap stops
-- **Section height**: 100vh (no longer 350vh — user doesn't scroll to drive frames)
+### Fix 5 — Scroll Animation ✅ COMPLETE (with ping-pong)
+- **Trigger**: `IntersectionObserver` at 15% threshold on `#scroll-anim`
+- **Behavior**: Always plays forward (frames 0→121) at 60fps over 2600ms, then **auto-reverses** (121→0), landing back on frame 0
+- **Resting state**: Frame 0 (first frame) is always shown — guaranteed by `stopAnimation()` + `drawFrameAt(0)` on exit
+- **No scroll-locking**: Zero snap/hold/lock code
+- **rAF engine**: `playAnimation(direction)` uses `requestAnimationFrame` with delta-time
 
 ---
 
-## 6. Known Issues and Incomplete Items
+## 6. Additional Features Built in This Session
+
+### Badge Perimeter Orbit
+- **CSS**: `position: fixed; top: 0; left: 0; z-index: 900; will-change: transform`
+- **JS**: `orbitBadge()` IIFE at line ~1727 — pure `requestAnimationFrame` loop
+- Traces a rectangular path around the 4 viewport edges clockwise in 30 seconds
+- Uses pure pixel `translate(Xpx, Ypx)` — GPU-composited, no Paint triggers
+- Clears navbar (84px from top), 28px padding from all edges
+- Visible on mobile (padding shrinks to 7px 12px on `max-width: 768px`)
+
+### Neon Button Effect — Vanilla Site
+- **CSS at line ~1017**: `::before` (top neon strip) and `::after` (bottom neon strip) on `.btn-primary`, `.btn-secondary`, `.btn-wa`, `.btn-call`
+- Solid red buttons (`.btn-primary`, `.btn-wa`): lighter `rgba(255,110,110)` glow visible on dark red bg
+- Outline buttons (`.btn-secondary`, `.btn-call`): `#CC0000` glow on light bg
+- Top strip: `opacity: 0` at rest → `opacity: 1` on hover (0.5s ease)
+- Bottom strip: `opacity: 0.25–0.3` at rest → `opacity: 0.5–0.55` on hover
+
+### Neon Button Component — React (`hitech-app`)
+- File: `hitech-app/src/components/ui/neon-button.tsx`
+- 3 variants: `default` (outline + glow), `solid` (filled red), `ghost` (no border)
+- 3 sizes: `sm`, `default`, `lg`
+- `neon={false}` prop disables glow strips entirely
+- All blue Tailwind classes replaced with `[#CC0000]` (brand red)
+- No new dependencies — `class-variance-authority` was already installed
+
+### Security Fixes
+- All `target="_blank"` external links now have `rel="noopener noreferrer"` (8 links total)
+
+### Nav Scroll-Spy
+- ⚠️ **Still NOT implemented** — `.active` CSS class is defined but no JS sets it dynamically as user scrolls. All nav links appear in the same muted color. See Section 7.
+
+---
+
+## 7. Known Issues and Incomplete Items
 
 ### ⚠️ Testimonials are PLACEHOLDERS
-The 5 testimonial cards contain invented customer names and quotes. Real reviews could not be fetched because Google Maps renders via JavaScript (not accessible via WebFetch).
+5 cards contain invented names/quotes. Real reviews are not fetchable programmatically (Google Maps uses JS rendering).
 
-**To replace with real reviews:**
-1. Open: https://maps.app.goo.gl/K9bYH4VzP1bWpQ6d9 in a browser
+**To replace:**
+1. Open https://maps.app.goo.gl/K9bYH4VzP1bWpQ6d9 in a browser
 2. Copy the text of each review
-3. Edit `hitech-scroll/index.html` — find the 5 `.testi-card` blocks (lines ~1275–1302) and replace content
-4. The placeholder note (`★ Replace with verified Google Maps reviews...`) is at line 1302 — delete it when done
+3. Edit `hitech-scroll/index.html` — find the 5 `.testi-card` blocks (~lines 1330–1360) and replace content
 
-### ⚠️ Nav "active" link is CSS-only, not scroll-tracked
-The `.active` class on nav links is defined in CSS but **no JavaScript sets it dynamically** as the user scrolls through sections. All three nav links (Services, About, Reviews) appear in the same muted color unless you manually add `class="active"` in the HTML.
+### ⚠️ Nav Active Link Scroll-Spy NOT wired
+- CSS: `.nav-links a.active { color: var(--red); }` — defined at line ~156
+- JS: **nothing sets this class dynamically**
+- Fix: Add a scroll-spy inside `handleScroll()` using `getBoundingClientRect()` on `#services`, `#specs`, `#testimonials`
 
-**To fix:** Add a scroll-spy function to `handleScroll()` that uses `getBoundingClientRect()` to detect which section is in view and toggles the `.active` class on the corresponding `<a>` element.
+### ⚠️ Background Paths Performance
+- `@keyframes hta-path-travel` animates `stroke-dashoffset` (causes Paint) + `opacity` (GPU-composited)
+- 72 paths total — may cause jank on low-end devices
+- Quick fix if needed: change `i < 36` to `i < 20` in `buildBackgroundPaths()` (~line 1785), or add `@media (max-width: 768px) { .hero-paths-wrap { display: none; } }`
 
-### ⚠️ Background paths animation: `stroke-dashoffset` is not GPU-composited
-The `@keyframes hta-path-travel` animates both `stroke-dashoffset` (causes paint) and `opacity` (composited). `will-change: opacity` was added to the path elements to batch opacity on the GPU, but `stroke-dashoffset` still triggers repaints on every frame for 72 paths. On lower-end devices this may cause jank.
+### ⚠️ GitHub Token — REVOKE IMMEDIATELY
+- Token was exposed in a previous chat session and has been redacted here
+- **Go to github.com/settings/tokens and delete it now** — generate a fresh one when needed next
 
-**If performance is an issue:** Reduce path count from 36 to 20 per layer in the `buildBackgroundPaths` IIFE (change `i < 36` to `i < 20`), or disable the paths on mobile with a `@media (max-width: 768px) { .hero-paths-wrap { display: none; } }` rule.
+### ℹ️ `hitech-app` unused `@base-ui/react` dep
+- `npm uninstall @base-ui/react` inside `hitech-app/` removes an unused dependency safely
 
-### ⚠️ ffmpeg binary was downloaded to /tmp — not permanent
-The ARM64 static ffmpeg binary used to extract frames was saved to `/tmp/ffmpeg-arm64`. If you need to re-extract frames (e.g., from a different video), you will need to re-download it:
-```bash
-curl -L "https://github.com/eugeneware/ffmpeg-static/releases/download/b6.0/ffmpeg-darwin-arm64" \
-  -o /tmp/ffmpeg-arm64 && chmod +x /tmp/ffmpeg-arm64
-```
+### ℹ️ No SVG version of logo
+- Only the PNG exists. No SVG was created.
 
-### ⚠️ `hitech-app` button.tsx was overridden
-shadcn initialized with `style: "base-nova"` which uses `@base-ui/react/button`. The provided Radix-based `button.tsx` was written on top of it. Both `@base-ui/react` and `@radix-ui/react-slot` are now in `package.json`. The `@base-ui/react` package is an unused dependency — it can be removed with `npm uninstall @base-ui/react` without breaking anything.
-
-### ℹ️ Port conflicts
-- Port 3000: occupied by PID 6237 (`node serve.mjs` — separate unrelated process)
-- `hitech-app` dev server uses port 3001
-- `hitech-scroll` HTTP server uses port 8080
-
-### ℹ️ No Google Maps reviews API integration
-Google Maps reviews require the **Google Places API** (paid). The Place ID for Hi-Tech Automobiles is:
-```
-0x391f1adc833b229d:0x4fd6a249656ba6ed
-```
-Coordinates: `32.5737037, 74.067955` (Gujrat, Punjab, Pakistan)
+### ℹ️ Mobile untested on real device
+- Responsive breakpoints exist (`max-width: 768px`) but site has only been verified on desktop
 
 ---
 
-## 7. Brand Information (collected during build)
+## 8. Brand Information
 
 | Field | Value |
 |---|---|
@@ -197,18 +230,17 @@ Coordinates: `32.5737037, 74.067955` (Gujrat, Punjab, Pakistan)
 | Location | Gujrat, Punjab, Pakistan |
 | Phone / WhatsApp | +92 300 4154606 |
 | Email | info@hitechautomobiles.com |
-| Website | https://hitechautomobiles.com |
 | Facebook | hitechautomobilesofficial |
 | Instagram | hitechautomobilesofficial |
 | YouTube | @hitechautomobilesofficial |
 | Google Maps | https://maps.app.goo.gl/K9bYH4VzP1bWpQ6d9 |
-| Accent color | `#CC0000` (deep red — matches logo) |
-| Background | `#FFFFFF` (white) |
 | WhatsApp link | `https://wa.me/923004154606` |
+| Accent color | `#CC0000` (deep red — matches logo) |
+| Background | `#FFFFFF` white |
 
 ---
 
-## 8. Design Tokens (CSS variables in `hitech-scroll/index.html`)
+## 9. Design Tokens (CSS variables in `index.html`)
 
 ```css
 --red:     #CC0000
@@ -226,28 +258,54 @@ Coordinates: `32.5737037, 74.067955` (Gujrat, Punjab, Pakistan)
 
 ---
 
-## 9. How the Scroll Animation Works (technical)
+## 10. How the Scroll Animation Works (technical)
 
-1. **Frame extraction**: `ffmpeg` at 24fps from `animation video.mp4` (5.08s) → 122 JPEG frames at 1920px width, `-q:v 2` (highest JPEG quality)
-2. **Preloading**: All 122 `<Image>` objects are created before loader dismisses. Progress bar tracks `loadedCount / 122`
-3. **IntersectionObserver**: Fires at 15% threshold on `#scroll-anim`
-4. **Direction detection**: `entry.boundingClientRect.top > 0` = entering from below = scroll down = play forward
-5. **Animation loop**: `playAnimation(direction)` calls `requestAnimationFrame`, increments `currentFrame` by `FRAMES_PER_MS * deltaTime` each tick (`PLAY_DURATION = 2600ms` for full sequence)
-6. **Drawing**: `drawFrameAt(idx)` uses cover-fit scaling — `Math.max(canvasW/iw, canvasH/ih)` — centered
-7. **Retina**: Canvas is sized at `window.innerWidth * devicePixelRatio`, CSS width stays at `window.innerWidth`, context is pre-scaled by DPR
-8. **Annotation cards**: Each card has `from` / `to` progress thresholds. `updateAnnotations(progress)` runs every frame tick and toggles `.visible` class
+1. **Preloading**: All 122 `Image` objects created before loader dismisses. Progress bar tracks `loadedCount / 122`
+2. **IntersectionObserver**: Fires at 15% threshold on `#scroll-anim` — always calls `playAnimation(1)` on enter
+3. **Forward play**: `playAnimation(1)` — rAF loop increments `currentFrame` by `FRAMES_PER_MS * delta` each tick (`PLAY_DURATION = 2600ms`)
+4. **Auto-reverse**: When `currentFrame >= 121` (done forward), immediately calls `playAnimation(-1)`
+5. **Reverse done**: When `currentFrame <= 0`, stops. Frame 0 is the resting state.
+6. **On exit**: `stopAnimation()` + `currentFrame = 0` + `drawFrameAt(0)` — guarantees reset
+7. **Drawing**: `drawFrameAt(idx)` uses cover-fit scaling — `Math.max(canvasW/iw, canvasH/ih)` — centered
+8. **Retina**: Canvas sized at `window.innerWidth * devicePixelRatio`, CSS width stays at `window.innerWidth`
 
 ---
 
-## 10. Remaining Work / What's Not Done
+## 11. Git & Deployment
+
+| Item | Value |
+|---|---|
+| GitHub repo | `https://github.com/shafay969/HI-TECH-AUTOMOBILES-Website` |
+| Branch | `main` |
+| Remote alias | `origin` |
+| GitHub username | `shafay969` |
+| Git identity | `shafaybilal` / `shafaybilal123@gmail.com` |
+| gh CLI binary | `~/bin/gh` (v2.89.0, downloaded manually — NOT in PATH by default) |
+
+**Future pushes** (after generating a new token):
+```bash
+cd "/Users/shafaybilal/Desktop/HITECH website"
+git add .
+git commit -m "your message"
+git push   # will prompt for username + token as password
+```
+
+**Netlify deployment settings:**
+- Repository: `shafay969/HI-TECH-AUTOMOBILES-Website`
+- Base directory: (empty)
+- Build command: (empty)
+- Publish directory: `hitech-scroll`
+
+---
+
+## 12. Remaining Work
 
 | Item | Status | Notes |
 |---|---|---|
-| Real Google Maps testimonials | ❌ Not done | Blocked — requires manual copy-paste or Places API |
-| Nav active link scroll-spy | ❌ Not done | CSS class defined but JS not wired |
-| Logo SVG version | ❌ Not created | Only PNG exists in assets |
+| Real Google Maps testimonials | ❌ Not done | Manual copy-paste from Google Maps required |
+| Nav active link scroll-spy | ❌ Not done | CSS class exists, JS not wired |
+| Logo SVG version | ❌ Not created | PNG only |
 | Mobile test on real device | ❌ Not tested | Desktop verified only |
-| Production deployment / hosting | ❌ Not done | Site is local-only |
-| `hitech-app` unused `@base-ui/react` dep | ⚠️ Minor | Can run `npm uninstall @base-ui/react` in `hitech-app/` |
-| Video with white first frame verification | ✅ User confirmed | "The animation video has a white background" |
-| `sections-guide.md` referenced in SKILL.md | ⚠️ Exists but unused | File at `scroll-stop-builder-skill/references/sections-guide.md` — was not read during build |
+| GitHub token revocation | ⚠️ Urgent | Revoke exposed token at github.com/settings/tokens |
+| `hitech-app` unused `@base-ui/react` | ⚠️ Minor | `npm uninstall @base-ui/react` in `hitech-app/` |
+| Custom domain setup | ❌ Not done | Configure in Netlify → Site settings → Domain management |
